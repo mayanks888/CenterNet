@@ -43,6 +43,8 @@ class Debugger(object):
         (255, 0, 0), (0, 0, 255)]
     elif num_classes == 80 or dataset == 'coco':
       self.names = coco_class_name
+    elif num_classes == 9 or dataset == 'BDD':
+      self.names = BDD_class_name
     elif num_classes == 20 or dataset == 'pascal':
       self.names = pascal_class_name
     elif dataset == 'gta':
@@ -62,7 +64,7 @@ class Debugger(object):
       self.focal_length = 721.5377
       self.W = 1242
       self.H = 375
-    num_classes = len(self.names)
+    # num_classes = len(self.names)
     self.down_ratio=down_ratio
     # for bird view
     self.world_size = 64
@@ -431,6 +433,7 @@ class Debugger(object):
 kitti_class_name = [
   'p', 'v', 'b'
 ]
+BDD_class_name=["person","rider","car","bus","truck","bike","motor", "traffic light","traffic sign","train"]
 
 gta_class_name = [
   'p', 'v'

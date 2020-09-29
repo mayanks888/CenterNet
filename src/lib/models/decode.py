@@ -102,7 +102,7 @@ def _topk_channel(scores, K=40):
 
 def _topk(scores, K=40):
     batch, cat, height, width = scores.size()
-      
+    dummy=(scores.view(batch, cat, -1))
     topk_scores, topk_inds = torch.topk(scores.view(batch, cat, -1), K)
 
     topk_inds = topk_inds % (height * width)
@@ -466,6 +466,7 @@ def ctdet_decode(heat, wh, reg=None, cat_spec_wh=False, K=100):
 
     # heat = torch.sigmoid(heat)
     # perform nms on heatmaps
+    #select highest keypoint on nerest 9 neighbour
     heat = _nms(heat)
       
     scores, inds, clses, ys, xs = _topk(heat, K=K)

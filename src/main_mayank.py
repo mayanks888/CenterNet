@@ -1,14 +1,11 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-
 import _init_paths
-
 import os
-
 import torch
 import torch.utils.data
-from opts import opts
+from opts_mayank import opts
 from models.model import create_model, load_model, save_model
 from models.data_parallel import DataParallel
 from logger import Logger
@@ -18,9 +15,13 @@ from trains.train_factory import train_factory
 
 def main(opt):
   torch.manual_seed(opt.seed)
+  # benchmark = True automatically find the most suitable high-efficiency algorithm ' \
+  # for the current configuration to achieve the problem of optimizing operating efficiency
   torch.backends.cudnn.benchmark = not opt.not_cuda_benchmark and not opt.test
-
+    #Obtain the configuration required for training a specific datasets (pascal in this case)
   Dataset = get_dataset(opt.dataset, opt.task)
+  # Update the data and other configurations, and set the model output heads.
+  # For example, we need bounding box recognition task, we need to set up three outputs hm, wh, reg
   opt = opts().update_dataset_info_and_set_heads(opt, Dataset)
   print(opt)
 
@@ -28,32 +29,36 @@ def main(opt):
 
   os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
   opt.device = torch.device('cuda' if opt.gpus[0] >= 0 else 'cpu')
-  
   print('Creating model...')
+  #object detection, 3D bounding box detection,extremedet, multi-person human pose estimation
   model = create_model(opt.arch, opt.heads, opt.head_conv)
+  # Here, heads = {'hm':3, 'wh':2, 'reg':2} the output channel through the dla model is 5,
+  # and the output channel is 256 after the first convolution, and then after the final 1\times 1$ convolution output hm is 3 channels,
+  # wh then 2 channels, reg then 2 aisle.
   optimizer = torch.optim.Adam(model.parameters(), opt.lr)
   start_epoch = 0
   if opt.load_model != '':
     model, optimizer, start_epoch = load_model(
       model, opt.load_model, optimizer, opt.resume, opt.lr, opt.lr_step)
-
+  # select training env of desired architecture ctdet in this case
   Trainer = train_factory[opt.task]
+  # Define loss for hm, wh and offset
   trainer = Trainer(opt, model, optimizer)
   trainer.set_device(opt.gpus, opt.chunk_sizes, opt.device)
 
   print('Setting up data...')
-  val_loader = torch.utils.data.DataLoader(
-      Dataset(opt, 'val'), 
-      batch_size=1, 
-      shuffle=False,
-      num_workers=1,
-      pin_memory=True
-  )
+  # val_loader = torch.utils.data.DataLoader(
+  #     Dataset(opt, 'val'),
+  #     batch_size=1,
+  #     shuffle=False,
+  #     num_workers=1,
+  #     pin_memory=True
+  # )
 
-  if opt.test:
-    _, preds = trainer.val(0, val_loader)
-    val_loader.dataset.run_eval(preds, opt.save_dir)
-    return
+  # if opt.test:
+  #   _, preds = trainer.val(0, val_loader)
+  #   val_loader.dataset.run_eval(preds, opt.save_dir)
+  #   return
 
   train_loader = torch.utils.data.DataLoader(
       Dataset(opt, 'train'), 

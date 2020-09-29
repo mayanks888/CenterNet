@@ -8,13 +8,15 @@ import torch
 import json
 import cv2
 import os
+import utils
 from utils.image import flip, color_aug
 from utils.image import get_affine_transform, affine_transform
 from utils.image import gaussian_radius, draw_umich_gaussian, draw_msra_gaussian
 from utils.image import draw_dense_reg
 import math
-
+import matplotlib.pyplot as plt
 class CTDetDataset(data.Dataset):
+  #where hm is the heatmap, wh is the width and height of the corresponding center point, and reg is the offset.
   def _coco_box_to_bbox(self, box):
     bbox = np.array([box[0], box[1], box[0] + box[2], box[1] + box[3]],
                     dtype=np.float32)
@@ -35,17 +37,20 @@ class CTDetDataset(data.Dataset):
     num_objs = min(len(anns), self.max_objs)
 
     img = cv2.imread(img_path)
+    print(img_path)
 
     height, width = img.shape[0], img.shape[1]
+    # c : center of image
     c = np.array([img.shape[1] / 2., img.shape[0] / 2.], dtype=np.float32)
     if self.opt.keep_res:
       input_h = (height | self.opt.pad) + 1
       input_w = (width | self.opt.pad) + 1
       s = np.array([input_w, input_h], dtype=np.float32)
     else:
+      # s : max dimension of image
       s = max(img.shape[0], img.shape[1]) * 1.0
       input_h, input_w = self.opt.input_h, self.opt.input_w
-    
+    # image argumentation
     flipped = False
     if self.split == 'train':
       if not self.opt.not_rand_crop:
@@ -66,7 +71,8 @@ class CTDetDataset(data.Dataset):
         img = img[:, ::-1, :]
         c[0] =  width - c[0] - 1
         
-
+#https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_geometric_transformations/py_geometric_transformations.html
+#geometric transformation
     trans_input = get_affine_transform(
       c, s, 0, [input_w, input_h])
     inp = cv2.warpAffine(img, trans_input, 
@@ -77,7 +83,7 @@ class CTDetDataset(data.Dataset):
       color_aug(self._data_rng, inp, self._eig_val, self._eig_vec)
     inp = (inp - self.mean) / self.std
     inp = inp.transpose(2, 0, 1)
-
+    #find head map for the output kernel
     output_h = input_h // self.opt.down_ratio
     output_w = input_w // self.opt.down_ratio
     num_classes = self.num_classes
@@ -99,11 +105,13 @@ class CTDetDataset(data.Dataset):
     for k in range(num_objs):
       ann = anns[k]
       bbox = self._coco_box_to_bbox(ann['bbox'])
-      cls_id = int(self.cat_ids[ann['category_id']])
+      # print(ann['category_id'])
+      cls_id = int(self.cat_ids[ann['category_id']-1])
       if flipped:
         bbox[[0, 2]] = width - bbox[[2, 0]] - 1
       bbox[:2] = affine_transform(bbox[:2], trans_output)
       bbox[2:] = affine_transform(bbox[2:], trans_output)
+      # Transforam bbox from input image to output resolution
       bbox[[0, 2]] = np.clip(bbox[[0, 2]], 0, output_w - 1)
       bbox[[1, 3]] = np.clip(bbox[[1, 3]], 0, output_h - 1)
       h, w = bbox[3] - bbox[1], bbox[2] - bbox[0]
@@ -114,15 +122,20 @@ class CTDetDataset(data.Dataset):
         ct = np.array(
           [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2], dtype=np.float32)
         ct_int = ct.astype(np.int32)
-        draw_gaussian(hm[cls_id], ct_int, radius)
+        heatmap=draw_gaussian(hm[cls_id], ct_int, radius)
+        # plt.plot(heatmap)
+        # plt.show()
+        # dimension of detection of height and widht
         wh[k] = 1. * w, 1. * h
+        #center*output widht +center
         ind[k] = ct_int[1] * output_w + ct_int[0]
+        #  which reg[k]represents the offset. About reg[k]the error caused by converting float to int type.
         reg[k] = ct - ct_int
         reg_mask[k] = 1
         cat_spec_wh[k, cls_id * 2: cls_id * 2 + 2] = wh[k]
         cat_spec_mask[k, cls_id * 2: cls_id * 2 + 2] = 1
         if self.opt.dense_wh:
-          draw_dense_reg(dense_wh, hm.max(axis=0), ct_int, wh[k], radius)
+          regmap=draw_dense_reg(dense_wh, hm.max(axis=0), ct_int, wh[k], radius)
         gt_det.append([ct[0] - w / 2, ct[1] - h / 2, 
                        ct[0] + w / 2, ct[1] + h / 2, 1, cls_id])
     
