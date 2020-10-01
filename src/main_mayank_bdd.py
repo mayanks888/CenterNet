@@ -47,14 +47,13 @@ def main(opt):
   trainer.set_device(opt.gpus, opt.chunk_sizes, opt.device)
 
   print('Setting up data...')
-  # val_loader = torch.utils.data.DataLoader(
-  #     Dataset(opt, 'val'),
-  #     batch_size=1,
-  #     shuffle=False,
-  #     num_workers=1,
-  #     pin_memory=True
-  # )
-
+  val_loader = torch.utils.data.DataLoader(
+      Dataset(opt, 'val'),
+      batch_size=1,
+      shuffle=False,
+      num_workers=1,
+      pin_memory=True
+  )
   # if opt.test:
   #   _, preds = trainer.val(0, val_loader)
   #   val_loader.dataset.run_eval(preds, opt.save_dir)
@@ -64,7 +63,7 @@ def main(opt):
       Dataset(opt, 'train'), 
       batch_size=opt.batch_size, 
       shuffle=True,
-      num_workers=opt.num_workers,
+      num_workers=1,#opt.num_workers,
       pin_memory=True,
       drop_last=True
   )
@@ -72,6 +71,7 @@ def main(opt):
   print('Starting training...')
   best = 1e10
   for epoch in range(start_epoch + 1, opt.num_epochs + 1):
+    # print("epoch are :",epoch)
     mark = epoch if opt.save_all else 'last'
     log_dict_train, _ = trainer.train(epoch, train_loader)
     logger.write('epoch: {} |'.format(epoch))

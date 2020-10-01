@@ -43,7 +43,7 @@ class Debugger(object):
         (255, 0, 0), (0, 0, 255)]
     elif num_classes == 80 or dataset == 'coco':
       self.names = coco_class_name
-    elif num_classes == 9 or dataset == 'BDD':
+    elif num_classes == 10 or dataset == 'BDD':
       self.names = BDD_class_name
     elif num_classes == 20 or dataset == 'pascal':
       self.names = pascal_class_name

@@ -16,7 +16,7 @@ class opts(object):
                              help='coco | kitti | coco_hp | pascal| BDD')
     self.parser.add_argument('--exp_id', default='default')
     self.parser.add_argument('--test', action='store_true')
-    self.parser.add_argument('--debug', type=int, default=4,
+    self.parser.add_argument('--debug', type=int, default=0,
                              help='level of visualization.'
                                   '1: only show the final detection results'
                                   '2: show the network output features'
@@ -25,9 +25,12 @@ class opts(object):
     self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterNet/images',
                              help='path to image/ image folders/ video. '
                                   'or "webcam"')
-    self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/CenterNet/models/ctdet_pascal_dla_384.pth',
-                             help='path to pretrained model')
-    self.parser.add_argument('--resume', action='store_true',
+    # self.parser.add_argument('--load_model', default='../models/ctdet_pascal_dla_384.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/ctdet_coco_dla_2x.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='../models/model_last.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='', help='path to pretrained model')
+    self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/model_last_bdd_49_epoch.pth', help='path to pretrained model')
+    self.parser.add_argument('--resume', default=True,action='store_true',
                              help='resume an experiment. '
                                   'Reloaded the optimizer parameter and '
                                   'set load_model to model_last.pth '
@@ -44,7 +47,7 @@ class opts(object):
                              help='random seed') # from CornerNet
 
     # log
-    self.parser.add_argument('--print_iter', type=int, default=0, 
+    self.parser.add_argument('--print_iter', type=int, default=1, 
                              help='disable progress bar and print to screen.')
     self.parser.add_argument('--hide_data_time', action='store_true',
                              help='not display time during training.')
@@ -86,7 +89,7 @@ class opts(object):
                              help='drop learning rate by 10.')
     self.parser.add_argument('--num_epochs', type=int, default=140,
                              help='total training epochs.')
-    self.parser.add_argument('--batch_size', type=int, default=1,
+    self.parser.add_argument('--batch_size', type=int, default=2,
                              help='batch size')
     self.parser.add_argument('--master_batch_size', type=int, default=-1,
                              help='batch size on the master gpu.')

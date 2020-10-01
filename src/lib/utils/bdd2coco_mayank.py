@@ -8,12 +8,12 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='BDD100K to COCO format')
     parser.add_argument(
           "-l", "--label_dir",
-          default="/home/mayank_s/datasets/bdd/centernet/bdd100k_labels_release/bdd100k/labels/",
+          default="/home/mayank_s/Desktop/bdd/base/",
           help="root directory of BDD label Json files",
     )
     parser.add_argument(
           "-s", "--save_path",
-          default="/home/mayank_s/datasets/bdd/centernet/coco_style_bdd",
+          default="/home/mayank_s/Desktop/bdd/res",
           help="path to save coco formatted label file",
     )
     return parser.parse_args()
@@ -27,6 +27,9 @@ def bdd2coco_detection(id_dict, labeled_images, fn):
     counter = 0
     for i in tqdm(labeled_images):
         counter += 1
+        if counter>10:
+            break
+        print(counter)
         image = dict()
         image['file_name'] = i['name']
         image['height'] = 720

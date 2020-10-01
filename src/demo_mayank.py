@@ -9,6 +9,7 @@ import cv2
 
 from opts_mayank_demo import opts
 from detectors.detector_factory import detector_factory
+from datasets.dataset_factory import dataset_factory
 
 image_ext = ['jpg', 'jpeg', 'png', 'webp']
 video_ext = ['mp4', 'mov', 'avi', 'mkv']
@@ -17,6 +18,10 @@ time_stats = ['tot', 'load', 'pre', 'net', 'dec', 'post', 'merge']
 def demo(opt):
   os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
   opt.debug = max(opt.debug, 1)
+
+  Dataset = dataset_factory[opt.dataset]
+  opt = opts().update_dataset_info_and_set_heads(opt, Dataset)
+
   Detector = detector_factory[opt.task]
   detector = Detector(opt)
 
@@ -53,4 +58,5 @@ def demo(opt):
       print(time_str)
 if __name__ == '__main__':
   opt = opts().init()
+  # opt = opts().parse()
   demo(opt)

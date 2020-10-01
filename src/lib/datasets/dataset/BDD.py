@@ -11,7 +11,7 @@ import os
 import torch.utils.data as data
 
 class BDD(data.Dataset):
-  num_classes = 9
+  num_classes = 10
   default_resolution = [416, 416]
   mean = np.array([0.280840, 0.294318, 0.292497],
                    dtype=np.float32).reshape(1, 1, 3)
@@ -40,11 +40,11 @@ class BDD(data.Dataset):
           self.data_dir, 'annotations', 
           'train.json').format(split)
     self.max_objs = 128
-    self.class_name ="person","rider","car","bus","truck","bike","motor", "traffic light","traffic sign","train"
+    self.class_name =["person","rider","car","bus","truck","bike","motor", "traffic light","traffic sign","train"]
 
     # self.class_name = ['vehicle', 'person', 'two-wheelers', '__background__']
     # self._valid_ids = [0, 1, 2, 3]
-    self._valid_ids = [0, 1, 2, 3,4,5,6,7,8]
+    self._valid_ids = [1, 2, 3,4,5,6,7,8,9,10]
     self.cat_ids = {v: i for i, v in enumerate(self._valid_ids)}
     self.voc_color = [(v // 32 * 64 + 64, (v // 8) % 4 * 64, v % 8 * 32) \
                       for v in range(1, self.num_classes + 1)]

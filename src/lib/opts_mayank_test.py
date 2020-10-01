@@ -22,12 +22,15 @@ class opts(object):
                                   '2: show the network output features'
                                   '3: use matplot to display' # useful when lunching training with ipython notebook
                                   '4: save all visualizations to disk')
-    # self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterTrack/test.avi', help='path to image/ image folders/ video. or "webcam"')
-    # self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterNet/images', help='path to image/ image folders/ video. or "webcam"')
-    self.parser.add_argument('--demo', default='/home/mayank_s/datasets/bdd/bdd100k_images/bdd100k/images/100k/val', help='path to image/ image folders/ video. or "webcam"')
-    # self.parser.add_argument('--load_model', default='../models/ctdet_coco_dla_2x.pth', help='path to pretrained model')
+    self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterNet/images',
+                             help='path to image/ image folders/ video. '
+                                  'or "webcam"')
+    # self.parser.add_argument('--load_model', default='../models/ctdet_pascal_dla_384.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/ctdet_coco_dla_2x.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='../models/model_last.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='', help='path to pretrained model')
     self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/model_last_bdd_49_epoch.pth', help='path to pretrained model')
-    self.parser.add_argument('--resume', action='store_true',
+    self.parser.add_argument('--resume', default=True,action='store_true',
                              help='resume an experiment. '
                                   'Reloaded the optimizer parameter and '
                                   'set load_model to model_last.pth '
@@ -44,7 +47,7 @@ class opts(object):
                              help='random seed') # from CornerNet
 
     # log
-    self.parser.add_argument('--print_iter', type=int, default=0, 
+    self.parser.add_argument('--print_iter', type=int, default=1, 
                              help='disable progress bar and print to screen.')
     self.parser.add_argument('--hide_data_time', action='store_true',
                              help='not display time during training.')
@@ -52,13 +55,13 @@ class opts(object):
                              help='save model to disk every 5 epochs.')
     self.parser.add_argument('--metric', default='loss', 
                              help='main metric to save best model')
-    self.parser.add_argument('--vis_thresh', type=float, default=0.3,
+    self.parser.add_argument('--vis_thresh', type=float, default=0.03,
                              help='visualization threshold.')
     self.parser.add_argument('--debugger_theme', default='white', 
                              choices=['white', 'black'])
     
     # model
-    self.parser.add_argument('--arch', default='dla_34',
+    self.parser.add_argument('--arch', default='dla_34', 
                              help='model architecture. Currently tested'
                                   'res_18 | res_101 | resdcn_18 | resdcn_101 |'
                                   'dlav0_34 | dla_34 | hourglass')
@@ -86,7 +89,7 @@ class opts(object):
                              help='drop learning rate by 10.')
     self.parser.add_argument('--num_epochs', type=int, default=140,
                              help='total training epochs.')
-    self.parser.add_argument('--batch_size', type=int, default=4,
+    self.parser.add_argument('--batch_size', type=int, default=1,
                              help='batch size')
     self.parser.add_argument('--master_batch_size', type=int, default=-1,
                              help='batch size on the master gpu.')
@@ -337,7 +340,7 @@ class opts(object):
 
   def init(self, args=''):
     default_dataset_info = {
-      'ctdet': {'default_resolution': [512, 512], 'num_classes': 80,
+      'ctdet': {'default_resolution': [512, 512], 'num_classes': 80, 
                 'mean': [0.408, 0.447, 0.470], 'std': [0.289, 0.274, 0.278],
                 'dataset': 'coco'},
       'exdet': {'default_resolution': [512, 512], 'num_classes': 80, 
