@@ -12,6 +12,7 @@ from .dataset.pascal import PascalVOC
 from .dataset.kitti import KITTI
 from .dataset.coco_hp import COCOHP
 from .dataset.BDD import BDD
+from .dataset.tl import tl
 
 
 dataset_factory = {
@@ -19,14 +20,17 @@ dataset_factory = {
   'pascal': PascalVOC,
   'kitti': KITTI,
   'coco_hp': COCOHP,
-  'BDD' : BDD
+  'BDD' : BDD,
+  'tl' : tl
 }
 
 _sample_factory = {
   'exdet': EXDetDataset,
   'ctdet': CTDetDataset,
   'ddd': DddDataset,
-  'multi_pose': MultiPoseDataset
+  'multi_pose': MultiPoseDataset,
+  'ctdet_multitask': CTDetDataset
+
 }
 
 

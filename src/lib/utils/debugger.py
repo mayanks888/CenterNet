@@ -45,6 +45,8 @@ class Debugger(object):
       self.names = coco_class_name
     elif num_classes == 10 or dataset == 'BDD':
       self.names = BDD_class_name
+    elif num_classes == 1 or dataset == 'tl':
+      self.names = tl_class_name
     elif num_classes == 20 or dataset == 'pascal':
       self.names = pascal_class_name
     elif dataset == 'gta':
@@ -439,6 +441,7 @@ gta_class_name = [
   'p', 'v'
 ]
 
+tl_class_name=['traffic_light']
 pascal_class_name = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", 
   "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", 
   "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]

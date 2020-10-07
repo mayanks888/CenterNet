@@ -56,6 +56,7 @@ def bdd2coco_detection(id_dict, labeled_images, fn):
                 annotation['id'] = label['id']
                 annotation['segmentation'] = [[x1, y1, x1, y2, x2, y2, x2, y1]]
                 annotations.append(annotation)
+                print(label['category'],label['id'])
 
         if empty_image:
             continue
@@ -65,7 +66,7 @@ def bdd2coco_detection(id_dict, labeled_images, fn):
     attr_dict["images"] = images
     attr_dict["annotations"] = annotations
     attr_dict["type"] = "instances"
-
+    cool=attr_dict
     print('saving...')
     json_string = json.dumps(attr_dict)
     with open(fn, "w") as file:

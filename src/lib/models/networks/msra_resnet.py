@@ -130,6 +130,7 @@ class PoseResNet_custom(nn.Module):
         # self.final_layer = []
 
         for head in sorted(self.heads):
+        # for head in (self.heads):
             if head.split("_")[-1]=="tl":
               num_output = self.heads[head]
               if head_conv > 0:

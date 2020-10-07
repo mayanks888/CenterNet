@@ -30,7 +30,7 @@ class opts(object):
     # self.parser.add_argument('--load_model', default='../models/model_last.pth', help='path to pretrained model')
     # self.parser.add_argument('--load_model', default='', help='path to pretrained model')
     self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/model_last_bdd_49_epoch.pth', help='path to pretrained model')
-    self.parser.add_argument('--resume', default=True,action='store_true',
+    self.parser.add_argument('--resume', default=False,action='store_true',
                              help='resume an experiment. '
                                   'Reloaded the optimizer parameter and '
                                   'set load_model to model_last.pth '
@@ -61,7 +61,7 @@ class opts(object):
                              choices=['white', 'black'])
     
     # model
-    self.parser.add_argument('--arch', default='dla_34', 
+    self.parser.add_argument('--arch', default='dla_34',
                              help='model architecture. Currently tested'
                                   'res_18 | res_101 | resdcn_18 | resdcn_101 |'
                                   'dlav0_34 | dla_34 | hourglass')
