@@ -10,7 +10,7 @@ class opts(object):
   def __init__(self):
     self.parser = argparse.ArgumentParser()
     # basic experiment setting
-    self.parser.add_argument('--task', default='ctdet_multitask', help='ctdet | ddd | multi_pose | exdet | ctdet_multitask')
+    self.parser.add_argument('--task', default='ddd_multitask', help='ctdet | ddd | multi_pose | exdet | ctdet_multitask|ddd_multitask')
     opt = self.parser.parse_args()
     self.parser.add_argument('--dataset', default='tl',
                              help='coco | kitti | coco_hp | pascal| BDD|tl')
@@ -31,7 +31,7 @@ class opts(object):
     # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/model_last_bdd_49_epoch.pth', help='path to pretrained model')
     # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/epoch140/default/model_last.pth', help='path to pretrained model')
     # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/model_last_multitask.pth', help='path to pretrained model')
-    self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/multitask/default/model_last_multitask140.pth', help='path to pretrained model')
+    self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/ddd_3dop.pth', help='path to pretrained model')
     self.parser.add_argument('--resume', default=False,action='store_true',
                              help='resume an experiment. '
                                   'Reloaded the optimizer parameter and '
@@ -319,6 +319,15 @@ class opts(object):
           {'wh': 2})
       if opt.reg_offset:
         opt.heads.update({'reg': 2})
+    elif opt.task == 'ddd_multitask':
+      # assert opt.dataset in ['gta', 'kitti', 'viper']
+      opt.heads = {'hm': 3, 'dep': 1, 'rot': 8, 'dim': 3}
+      if opt.reg_bbox:
+        opt.heads.update(
+          {'wh': 2})
+      if opt.reg_offset:
+        opt.heads.update({'reg': 2})
+      opt.heads.update({'hm_tl': 1, 'wh_tl': 2, 'reg_tl': 2})
     elif opt.task == 'ctdet':
       # assert opt.dataset in ['pascal', 'coco']
       opt.heads = {'hm': opt.num_classes,
@@ -332,6 +341,7 @@ class opts(object):
       opt.heads.update({'hm_tl': 1, 'wh_tl': 2, 'reg_tl': 2})
       if opt.reg_offset:
         opt.heads.update({'reg': 2})
+
     elif opt.task == 'multi_pose':
       # assert opt.dataset in ['coco_hp']
       opt.flip_idx = dataset.flip_idx

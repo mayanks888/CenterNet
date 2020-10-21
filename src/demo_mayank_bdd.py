@@ -61,48 +61,48 @@ def demo(opt):
 
 
       #################################################################33
-      resu = ret['results']
-      for data in resu:
-          print(resu[data])
-          for arr in resu[data]:
-              print(arr)
-          # print(data)
-
-              # $$$$$$$$$$$$$$$$$$$$$$
-              xmin = int(arr[0])
-              ymin = int(arr[1])
-              xmax = int(arr[2])
-              ymax = int(arr[3])
-              score = float(arr[4])
-              width = 1
-              height = 1
-              # coordinate = [xmin, ymin, xmax, ymax, class_num]
-              # object_name=object_name+"_"+light_color
-              # object_name = "traffic_light"
-              # print(data)
-              object_name = class_name[data-1]
-              data_label = [image_name, width, height, object_name, xmin, ymin, xmax, ymax,score]
-              # data_label = [file_name, width, height, object_name, xmin, ymin, xmax, ymax]
-              if not ((xmin == xmax) and (ymin == ymax)):
-                  bblabel.append(data_label)
-                  print(file_name)
-                  # print()
-          else:
-              print("file_name")
-
-
-
-
-
-    ############################## #############################################333
-      time_str = ''
-      for stat in time_stats:
-        time_str = time_str + '{} {:.3f}s |'.format(stat, ret[stat])
-      print(time_str)
-
-    columns = ['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax','score']
-    df = pd.DataFrame(bblabel, columns=columns)
-    df.to_csv('centernet_prediction_val.csv', index=False)
+    #   resu = ret['results']
+    #   for data in resu:
+    #       print(resu[data])
+    #       for arr in resu[data]:
+    #           print(arr)
+    #       # print(data)
+    #
+    #           # $$$$$$$$$$$$$$$$$$$$$$
+    #           xmin = int(arr[0])
+    #           ymin = int(arr[1])
+    #           xmax = int(arr[2])
+    #           ymax = int(arr[3])
+    #           score = float(arr[4])
+    #           width = 1
+    #           height = 1
+    #           # coordinate = [xmin, ymin, xmax, ymax, class_num]
+    #           # object_name=object_name+"_"+light_color
+    #           # object_name = "traffic_light"
+    #           # print(data)
+    #           object_name = class_name[data-1]
+    #           data_label = [image_name, width, height, object_name, xmin, ymin, xmax, ymax,score]
+    #           # data_label = [file_name, width, height, object_name, xmin, ymin, xmax, ymax]
+    #           if not ((xmin == xmax) and (ymin == ymax)):
+    #               bblabel.append(data_label)
+    #               print(file_name)
+    #               # print()
+    #       else:
+    #           print("file_name")
+    #
+    #
+    #
+    #
+    #
+    # ############################## #############################################333
+    #   time_str = ''
+    #   for stat in time_stats:
+    #     time_str = time_str + '{} {:.3f}s |'.format(stat, ret[stat])
+    #   print(time_str)
+    #
+    # columns = ['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax','score']
+    # df = pd.DataFrame(bblabel, columns=columns)
+    # df.to_csv('centernet_prediction_val.csv', index=False)
 
 if __name__ == '__main__':
   # opt = opts().init()

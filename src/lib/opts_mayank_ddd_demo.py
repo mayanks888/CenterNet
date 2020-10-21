@@ -10,10 +10,10 @@ class opts(object):
   def __init__(self):
     self.parser = argparse.ArgumentParser()
     # basic experiment setting
-    self.parser.add_argument('--task', default='ctdet_multitask', help='ctdet | ddd | multi_pose | exdet | ctdet_multitask')
+    self.parser.add_argument('--task', default='ddd', help='ctdet | ddd | multi_pose | exdet')
     opt = self.parser.parse_args()
-    self.parser.add_argument('--dataset', default='tl',
-                             help='coco | kitti | coco_hp | pascal| BDD|tl')
+    self.parser.add_argument('--dataset', default='BDD',
+                             help='coco | kitti | coco_hp | pascal| BDD')
     self.parser.add_argument('--exp_id', default='default')
     self.parser.add_argument('--test', action='store_true')
     self.parser.add_argument('--debug', type=int, default=0,
@@ -22,17 +22,14 @@ class opts(object):
                                   '2: show the network output features'
                                   '3: use matplot to display' # useful when lunching training with ipython notebook
                                   '4: save all visualizations to disk')
-    self.parser.add_argument('--demo', default='/home/mayank_s/datasets/bdd_bosch/data/images/val', help='path to image/ image folders/ video. or "webcam"')
+    # self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterTrack/test.avi', help='path to image/ image folders/ video. or "webcam"')
+    # self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterNet/images', help='path to image/ image folders/ video. or "webcam"')
     # self.parser.add_argument('--demo', default='/home/mayank_s/datasets/bdd/bdd100k_images/bdd100k/images/100k/val', help='path to image/ image folders/ video. or "webcam"')
-    # self.parser.add_argument('--load_model', default='../modelsgggggggggggggggggg/ctdet_pascal_dla_384.pth', help='path to pretrained model')
-    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/ctdet_coco_dla_2x.pth', help='path to pretrained model')
-    # self.parser.add_argument('--load_model', default='../models/model_last.pth', help='path to pretrained model')
-    # self.parser.add_argument('--load_model', default='', help='path to pretrained model')
-    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/model_last_bdd_49_epoch.pth', help='path to pretrained model')
-    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/epoch140/default/model_last.pth', help='path to pretrained model')
-    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/model_last_multitask.pth', help='path to pretrained model')
-    self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/multitask/default/model_last_multitask140.pth', help='path to pretrained model')
-    self.parser.add_argument('--resume', default=False,action='store_true',
+    self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/videos/nuscenes_mini.mp4', help='path to image/ image folders/ video. or "webcam"')
+    # self.parser.add_argument('--load_model', default='../models/ctdet_coco_dla_2x.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/ddd_3dop.pth', help='path to pretrained model')
+    self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/CenterTrack/models/nuScenes_3Dtracking.pth', help='path to pretrained model')
+    self.parser.add_argument('--resume', action='store_true',
                              help='resume an experiment. '
                                   'Reloaded the optimizer parameter and '
                                   'set load_model to model_last.pth '
@@ -49,7 +46,7 @@ class opts(object):
                              help='random seed') # from CornerNet
 
     # log
-    self.parser.add_argument('--print_iter', type=int, default=1, 
+    self.parser.add_argument('--print_iter', type=int, default=1,
                              help='disable progress bar and print to screen.')
     self.parser.add_argument('--hide_data_time', action='store_true',
                              help='not display time during training.')
@@ -66,7 +63,7 @@ class opts(object):
     self.parser.add_argument('--arch', default='dlam_34',
                              help='model architecture. Currently tested'
                                   'res_18 | res_101 | resdcn_18 | resdcn_101 |'
-                                  'dlav0_34 | dla_34 | hourglass| dlam_34')
+                                  'dlav0_34 | dla_34 |dlam_34| hourglass')
     self.parser.add_argument('--head_conv', type=int, default=-1,
                              help='conv layer channels for output head'
                                   '0 for no conv layer'
@@ -91,13 +88,13 @@ class opts(object):
                              help='drop learning rate by 10.')
     self.parser.add_argument('--num_epochs', type=int, default=140,
                              help='total training epochs.')
-    self.parser.add_argument('--batch_size', type=int, default=16,
+    self.parser.add_argument('--batch_size', type=int, default=4,
                              help='batch size')
     self.parser.add_argument('--master_batch_size', type=int, default=-1,
                              help='batch size on the master gpu.')
     self.parser.add_argument('--num_iters', type=int, default=-1,
                              help='default: #samples / batch_size.')
-    self.parser.add_argument('--val_intervals', type=int, default=1,
+    self.parser.add_argument('--val_intervals', type=int, default=5,
                              help='number of epochs to run validation.')
     self.parser.add_argument('--trainval', action='store_true',
                              help='include validation in training and '
@@ -325,13 +322,6 @@ class opts(object):
                    'wh': 2 if not opt.cat_spec_wh else 2 * opt.num_classes}
       if opt.reg_offset:
         opt.heads.update({'reg': 2})
-    elif opt.task == 'ctdet_multitask':
-      # assert opt.dataset in ['pascal', 'coco']
-      opt.heads = {'hm': 10,
-                   'wh': 2 if not opt.cat_spec_wh else 2 * opt.num_classes}
-      opt.heads.update({'hm_tl': 1, 'wh_tl': 2, 'reg_tl': 2})
-      if opt.reg_offset:
-        opt.heads.update({'reg': 2})
     elif opt.task == 'multi_pose':
       # assert opt.dataset in ['coco_hp']
       opt.flip_idx = dataset.flip_idx
@@ -349,7 +339,7 @@ class opts(object):
 
   def init(self, args=''):
     default_dataset_info = {
-      'ctdet': {'default_resolution': [512, 512], 'num_classes': 80, 
+      'ctdet': {'default_resolution': [512, 512], 'num_classes': 80,
                 'mean': [0.408, 0.447, 0.470], 'std': [0.289, 0.274, 0.278],
                 'dataset': 'coco'},
       'exdet': {'default_resolution': [512, 512], 'num_classes': 80, 

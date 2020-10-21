@@ -5,7 +5,7 @@ import _init_paths
 import os
 import torch
 import torch.utils.data
-from src.lib.opts_mayank_multitask import opts
+from src.lib.opts_mayank_ddd_multitask import opts
 from src.lib.models.model import create_model, load_model, save_model
 from src.lib.models.data_parallel import DataParallel
 from src.lib.logger import Logger

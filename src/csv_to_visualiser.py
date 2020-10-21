@@ -7,6 +7,7 @@ import pandas as pd
 # csv_path='yolo1.csv'
 # csv_path='/home/mayank_s/datasets/bdd/training_set/only_csv/front_light_bdd.csv'
 csv_path='centernet_prediction_val.csv'
+# csv_path='centernet_multitask.csv'
 root='/home/mayank_s/datasets/bdd/bdd100k_images/bdd100k/images/100k/val'
 saving_path = ""
 data = pd.read_csv(csv_path)

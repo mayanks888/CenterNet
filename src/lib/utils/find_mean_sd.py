@@ -4,7 +4,7 @@ from tqdm import tqdm
 
 
 def main():
-    dirs = '/home/mayank_s/datasets/bdd_bosch/data/images/train_val'
+    dirs = '/home/mayank_s/datasets/bdd/bdd100k_images/bdd100k/images/100k/train'
     img_file_names = os.listdir(dirs)
     m_list, s_list = [], []
     for img_filename in tqdm(img_file_names):

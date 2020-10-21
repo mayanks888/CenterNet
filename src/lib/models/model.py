@@ -30,14 +30,14 @@ def create_model(arch, heads, head_conv):
   get_model = _model_factory[arch]
   model = get_model(num_layers=num_layers, heads=heads, head_conv=head_conv)
   return model
-
-def create_model_custom(arch, heads, head_conv):
-  num_layers = int(arch[arch.find('_') + 1:]) if '_' in arch else 0
-  arch = arch[:arch.find('_')] if '_' in arch else arch
-  arch='dlam'
-  get_model = _model_factory[arch]
-  model = get_model(num_layers=num_layers, heads=heads, head_conv=head_conv)
-  return model
+#
+# def create_model_custom(arch, heads, head_conv):
+#   num_layers = int(arch[arch.find('_') + 1:]) if '_' in arch else 0
+#   arch = arch[:arch.find('_')] if '_' in arch else arch
+#   arch='dlam'
+#   get_model = _model_factory[arch]
+#   model = get_model(num_layers=num_layers, heads=heads, head_conv=head_conv)
+#   return model
 
 def load_model(model, model_path, optimizer=None, resume=False, 
                lr=None, lr_step=None):

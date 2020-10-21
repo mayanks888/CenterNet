@@ -7,9 +7,9 @@ import _init_paths
 import os
 import cv2
 import pandas as pd
-from opts_mayank_demo import opts
-from detectors.detector_factory import detector_factory
-from datasets.dataset_factory import dataset_factory
+from src.lib.opts_mayank_multitask import opts
+from src.lib.detectors.detector_factory import detector_factory
+from src.lib.datasets.dataset_factory import dataset_factory
 
 image_ext = ['jpg', 'jpeg', 'png', 'webp']
 video_ext = ['mp4', 'mov', 'avi', 'mkv']
@@ -40,7 +40,7 @@ def demo(opt):
         time_str = ''
         for stat in time_stats:
           time_str = time_str + '{} {:.3f}s |'.format(stat, ret[stat])
-        print(time_str)
+        # print(time_str)
         if cv2.waitKey(1) == 27:
             return  # esc to quit
   else:
@@ -103,7 +103,7 @@ def demo(opt):
 
     columns = ['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax','score']
     df = pd.DataFrame(bblabel, columns=columns)
-    df.to_csv('centernet_prediction_val.csv', index=False)
+    df.to_csv('centernet_multitask.csv', index=False)
 
 if __name__ == '__main__':
   # opt = opts().init()

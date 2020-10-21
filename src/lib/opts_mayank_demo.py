@@ -25,8 +25,10 @@ class opts(object):
     # self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterTrack/test.avi', help='path to image/ image folders/ video. or "webcam"')
     # self.parser.add_argument('--demo', default='/home/mayank_s/codebase/others/centernet/CenterNet/images', help='path to image/ image folders/ video. or "webcam"')
     self.parser.add_argument('--demo', default='/home/mayank_s/datasets/bdd/bdd100k_images/bdd100k/images/100k/val', help='path to image/ image folders/ video. or "webcam"')
+    # self.parser.add_argument('--demo', default='/home/mayank_s/datasets/bdd_bosch/data/images/val', help='path to image/ image folders/ video. or "webcam"')
     # self.parser.add_argument('--load_model', default='../models/ctdet_coco_dla_2x.pth', help='path to pretrained model')
     self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/epoch140/default/model_best.pth', help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='/home/mayank_s/codebase/others/centernet/mayank/CenterNet/models/multitask/default/model_last_multitask140.pth', help='path to pretrained model')
     self.parser.add_argument('--resume', action='store_true',
                              help='resume an experiment. '
                                   'Reloaded the optimizer parameter and '
@@ -44,7 +46,7 @@ class opts(object):
                              help='random seed') # from CornerNet
 
     # log
-    self.parser.add_argument('--print_iter', type=int, default=0, 
+    self.parser.add_argument('--print_iter', type=int, default=1,
                              help='disable progress bar and print to screen.')
     self.parser.add_argument('--hide_data_time', action='store_true',
                              help='not display time during training.')

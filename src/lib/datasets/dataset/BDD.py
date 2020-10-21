@@ -13,6 +13,10 @@ import torch.utils.data as data
 class BDD(data.Dataset):
   num_classes = 10
   default_resolution = [416, 416]
+#########################################333
+  # mean = [0.27867313 ,0.29260997, 0.28993384]
+  # std = [0.19730162, 0.1980106 , 0.20070283]
+ ########################################33
   mean = np.array([0.280840, 0.294318, 0.292497],
                    dtype=np.float32).reshape(1, 1, 3)
   std  = np.array([0.247479, 0.265157, 0.275902],
